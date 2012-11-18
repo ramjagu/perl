@@ -1490,6 +1490,7 @@ Perl_is_uni_alnum(pTHX_ UV c)
     return is_utf8_alnum(tmpbuf);
 }
 
+//# if 0
 bool
 Perl_is_uni_idfirst(pTHX_ UV c)
 {
@@ -1497,6 +1498,7 @@ Perl_is_uni_idfirst(pTHX_ UV c)
     uvchr_to_utf8(tmpbuf, c);
     return is_utf8_idfirst(tmpbuf);
 }
+//#endif
 
 bool
 Perl_is_uni_alpha(pTHX_ UV c)
@@ -1515,17 +1517,13 @@ Perl_is_uni_ascii(pTHX_ UV c)
 bool
 Perl_is_uni_blank(pTHX_ UV c)
 {
-    U8 tmpbuf[UTF8_MAXBYTES+1];
-    uvchr_to_utf8(tmpbuf, c);
-    return is_utf8_blank(tmpbuf);
+    return isBLANK_uni(c);
 }
 
 bool
 Perl_is_uni_space(pTHX_ UV c)
 {
-    U8 tmpbuf[UTF8_MAXBYTES+1];
-    uvchr_to_utf8(tmpbuf, c);
-    return is_utf8_space(tmpbuf);
+    return isSPACE_uni(c);
 }
 
 bool
@@ -1585,9 +1583,7 @@ Perl_is_uni_punct(pTHX_ UV c)
 bool
 Perl_is_uni_xdigit(pTHX_ UV c)
 {
-    U8 tmpbuf[UTF8_MAXBYTES_CASE+1];
-    uvchr_to_utf8(tmpbuf, c);
-    return is_utf8_xdigit(tmpbuf);
+    return isXDIGIT_uni(c);
 }
 
 UV
@@ -1822,11 +1818,13 @@ Perl_is_uni_alnum_lc(pTHX_ UV c)
     return is_uni_alnum(c);	/* XXX no locale support yet */
 }
 
+//#if 0
 bool
 Perl_is_uni_idfirst_lc(pTHX_ UV c)
 {
     return is_uni_idfirst(c);	/* XXX no locale support yet */
 }
+//#endif
 
 bool
 Perl_is_uni_alpha_lc(pTHX_ UV c)
@@ -1976,6 +1974,7 @@ Perl_is_utf8_alnum(pTHX_ const U8 *p)
     return is_utf8_common(p, &PL_utf8_alnum, "IsWord");
 }
 
+//#if 0
 bool
 Perl_is_utf8_idfirst(pTHX_ const U8 *p) /* The naming is historical. */
 {
@@ -1988,6 +1987,7 @@ Perl_is_utf8_idfirst(pTHX_ const U8 *p) /* The naming is historical. */
     /* is_utf8_idstart would be more logical. */
     return is_utf8_common(p, &PL_utf8_idstart, "IdStart");
 }
+//#endif
 
 bool
 Perl_is_utf8_xidfirst(pTHX_ const U8 *p) /* The naming is historical. */
@@ -2012,6 +2012,8 @@ Perl__is_utf8__perl_idstart(pTHX_ const U8 *p)
     return is_utf8_common(p, &PL_utf8_perl_idstart, "_Perl_IDStart");
 }
 
+//#if 0
+
 bool
 Perl_is_utf8_idcont(pTHX_ const U8 *p)
 {
@@ -2021,6 +2023,7 @@ Perl_is_utf8_idcont(pTHX_ const U8 *p)
 
     return is_utf8_common(p, &PL_utf8_idcont, "IdContinue");
 }
+//#endif
 
 bool
 Perl_is_utf8_xidcont(pTHX_ const U8 *p)
@@ -2061,7 +2064,7 @@ Perl_is_utf8_blank(pTHX_ const U8 *p)
 
     PERL_ARGS_ASSERT_IS_UTF8_BLANK;
 
-    return is_utf8_common(p, &PL_utf8_blank, "XPosixBlank");
+    return isBLANK_utf8(p);
 }
 
 bool
@@ -2071,7 +2074,7 @@ Perl_is_utf8_space(pTHX_ const U8 *p)
 
     PERL_ARGS_ASSERT_IS_UTF8_SPACE;
 
-    return is_utf8_common(p, &PL_utf8_space, "IsXPerlSpace");
+    return isSPACE_utf8(p);
 }
 
 bool
@@ -2147,15 +2150,7 @@ Perl_is_utf8_cntrl(pTHX_ const U8 *p)
 
     PERL_ARGS_ASSERT_IS_UTF8_CNTRL;
 
-    if (isASCII(*p)) {
-	return isCNTRL_A(*p);
-    }
-
-    /* All controls are in Latin1 */
-    if (! UTF8_IS_DOWNGRADEABLE_START(*p)) {
-	return 0;
-    }
-    return isCNTRL_L1(TWO_BYTE_UTF8_TO_UNI(*p, *(p+1)));
+    return isCNTRL_utf8(p);
 }
 
 bool
@@ -2195,7 +2190,7 @@ Perl_is_utf8_xdigit(pTHX_ const U8 *p)
 
     PERL_ARGS_ASSERT_IS_UTF8_XDIGIT;
 
-    return is_utf8_common(p, &PL_utf8_xdigit, "IsXDigit");
+    return is_XDIGIT_utf8(p);
 }
 
 bool

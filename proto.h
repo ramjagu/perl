@@ -6650,6 +6650,12 @@ PERL_CALLCONV SV*	Perl__invlist_contents(pTHX_ SV* const invlist)
 #define PERL_ARGS_ASSERT__INVLIST_CONTENTS	\
 	assert(invlist)
 
+PERL_CALLCONV void	Perl__invlist_dump(pTHX_ SV* const invlist, const char * const header)
+			__attribute__nonnull__(pTHX_1)
+			__attribute__nonnull__(pTHX_2);
+#define PERL_ARGS_ASSERT__INVLIST_DUMP	\
+	assert(invlist); assert(header)
+
 PERL_STATIC_INLINE UV	S__invlist_len(pTHX_ SV* const invlist)
 			__attribute__warn_unused_result__
 			__attribute__nonnull__(pTHX_1);

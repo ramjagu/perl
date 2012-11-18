@@ -5323,6 +5323,8 @@ Perl_re_op_compile(pTHX_ SV ** const patternp, int pat_count,
     /* Initialize these here instead of as-needed, as is quick and avoids
      * having to test them each time otherwise */
     if (! PL_AboveLatin1) {
+        U8 swash_init_flags = _CORE_SWASH_INIT_ACCEPT_INVLIST;
+
 	PL_AboveLatin1 = _new_invlist_C_array(AboveLatin1_invlist);
 	PL_ASCII = _new_invlist_C_array(ASCII_invlist);
 	PL_Latin1 = _new_invlist_C_array(Latin1_invlist);
@@ -5360,6 +5362,7 @@ Perl_re_op_compile(pTHX_ SV ** const patternp, int pat_count,
 
 	PL_PosixSpace = _new_invlist_C_array(PosixSpace_invlist);
 	PL_XPosixSpace = _new_invlist_C_array(XPosixSpace_invlist);
+        PL_utf8_space = _core_swash_init("", "", &PL_sv_undef, 1, 0, PL_XPosixSpace, &swash_init_flags);
 
 	PL_L1PosixUpper = _new_invlist_C_array(L1PosixUpper_invlist);
 	PL_PosixUpper = _new_invlist_C_array(PosixUpper_invlist);

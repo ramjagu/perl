@@ -1389,12 +1389,20 @@ LNBREAK: Line Break: \R
 \p{VertSpace}
 
 HORIZWS: Horizontal Whitespace: \h \H
-=> generic UTF8 LATIN1 cp :fast safe
+=> generic UTF8 LATIN1 high cp cp_high :fast safe
 \p{HorizSpace}
 
 VERTWS: Vertical Whitespace: \v \V
-=> generic UTF8 LATIN1 cp :fast safe
+=> generic UTF8 high LATIN1 cp cp_high :fast safe
 \p{VertSpace}
+
+XDIGIT: Hexadecimal digits
+=> UTF8 high cp_high :fast
+\p{XDigit}
+
+XPERLSPACE: \p{XPerlSpace}
+=> generic UTF8 high cp_high :fast
+\p{XPerlSpace}
 
 REPLACEMENT: Unicode REPLACEMENT CHARACTER
 => UTF8 :safe
